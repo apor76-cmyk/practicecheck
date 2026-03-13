@@ -3,324 +3,683 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Habit Manager Pro FINAL</title>
+<title>Practice Check</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root{--bg:#f4f6fb;--card:#fff;--text:#111;}
-.dark{--bg:#0f172a;--card:#1e293b;--text:#e5e7eb;}
-body{margin:0;font-family:-apple-system;background:var(--bg);color:var(--text);}
-header{position:sticky;top:0;background:var(--card);padding:10px;display:flex;gap:10px;flex-wrap:wrap;border-bottom:1px solid #ddd;}
-
-.area-bar{
-background:var(--card);
-padding:8px;
-border-bottom:1px solid #ddd;
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-align-items:center;
+/* ══ Design Tokens ══ */
+:root {
+  --bg: #f0f2f5;
+  --surface: #f8f9fb;
+  --card: #ffffff;
+  --card2: #f0f2f7;
+  --text: #1a1d23;
+  --text2: #3d4148;
+  --sub: #8b909a;
+  --border: #e2e5ea;
+  --accent: #3a5bd9;
+  --accent-light: #eef1fc;
+  --ok: #16a34a;
+  --ok-light: #dcfce7;
+  --shadow: 0 2px 10px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 18px rgba(0,0,0,0.09);
+  --radius: 12px;
+  --today-bg: #fef9c3;
+  --today-text: #854d0e;
+}
+body.dark {
+  --bg: #13151a;
+  --surface: #1c1f26;
+  --card: #222630;
+  --card2: #292d38;
+  --text: #e8eaf0;
+  --text2: #b0b5c0;
+  --sub: #636875;
+  --border: #2e3240;
+  --accent: #5b7af5;
+  --accent-light: #1e2340;
+  --ok: #4ade80;
+  --ok-light: #14291e;
+  --shadow: 0 2px 10px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 18px rgba(0,0,0,0.4);
+  --today-bg: #2d2507;
+  --today-text: #fbbf24;
 }
 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.area-bar button{
-  background:#f1f3f5;          /* 밝은 회색 */
-  color:#111;
-  border:1px solid #e5e7eb;
-  border-radius:10px;
-  padding:6px 12px;
-  font-weight:500;
-  transition:all .15s ease;
-  margin-right:10px;
+body {
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-.area-bar button:hover{
-  background:#e9ecef;
+/* ── Header ── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow);
+}
+.logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.3px;
+  margin-right: 6px;
+  white-space: nowrap;
+}
+.header-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 2px;
 }
 
-button.active{
-  background:#e5e7eb;          /* 선택 상태 */
-  color:#000;
-  border:1px solid #d1d5db;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,.08);
+/* ── Buttons (global) ── */
+button {
+  padding: 6px 13px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card2);
+  color: var(--text2);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
 }
-/* ✅ 추가 */
-.area-bar button{ margin-right:8px; }
- 
+button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff !important;
+  border-color: transparent;
+  font-weight: 600;
+}
+.btn-primary:hover {
+  background: #2d4bc4;
+  border-color: transparent;
+}
+.btn-danger {
+  background: #fee2e2;
+  color: #dc2626 !important;
+  border-color: transparent;
+}
+.btn-danger:hover { background: #dc2626; color: #fff !important; }
 
-.panel{background:var(--card);padding:10px;border-bottom:1px solid #ddd;}
-.container{padding:12px;}
+input, select {
+  padding: 6px 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+input:focus, select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+input[type="color"] {
+  width: 36px;
+  height: 32px;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+input[type="date"] { min-width: 140px; }
 
-table{border-collapse:collapse;width:100%;min-width:700px;}
-th,td{border:1px solid #ddd;padding:8px;text-align:center;}
-.category-label{padding:2px 6px;border-radius:6px;color:#fff;font-size:12px;}
-.today{background:#fde68a;color:#000;}
+/* ── Area bar ── */
+.area-bar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 20px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.area-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--sub);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-right: 2px;
+}
+.area-btn {
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 12.5px;
+}
+.area-btn.active {
+  background: var(--accent);
+  color: #fff !important;
+  border-color: transparent;
+  font-weight: 600;
+}
+.area-btn.active:hover { background: #2d4bc4; color: #fff !important; border-color: transparent; }
 
-button{padding:4px 8px;border:none;border-radius:6px;background:#FF9900;color:#fff;cursor:pointer;}
-button.active{background:#2563eb;}
+/* ── Collapsible manage panel ── */
+.manage-toggle-btn {
+  font-size: 12.5px;
+  padding: 5px 13px;
+}
+.manage-panel {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.2s;
+  padding: 0 20px;
+}
+.manage-panel.open {
+  max-height: 400px;
+  opacity: 1;
+  padding: 16px 20px;
+}
+.manage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 14px;
+}
+.manage-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+.manage-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sub);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 10px;
+}
+.manage-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.manage-row + .manage-row { margin-top: 7px; }
 
-input,select{padding:4px 6px;border-radius:4px;border:1px solid #ccc;}
+/* ── Main container ── */
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Section card ── */
+.section-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.section-header {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.1px;
+}
+.section-body {
+  padding: 0;
+  overflow-x: auto;
+}
+
+/* ── Table ── */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 640px;
+  font-size: 13px;
+}
+th {
+  padding: 10px 12px;
+  text-align: center;
+  background: var(--surface);
+  color: var(--sub);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+th:first-child { text-align: left; padding-left: 18px; }
+td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+  vertical-align: middle;
+}
+td:first-child { text-align: left; padding-left: 18px; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--surface); }
+
+/* Today column highlight */
+.today-col { background: var(--today-bg) !important; color: var(--today-text) !important; }
+th.today-col { color: var(--today-text) !important; }
+
+/* Cycle cell */
+td.cycle-cell {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background 0.12s;
+  border-radius: 0;
+  user-select: none;
+}
+td.cycle-cell:hover { filter: brightness(0.94); }
+td.cycle-cell:active { filter: brightness(0.85); }
+
+/* Category badge */
+.cat-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* Stats table accent */
+#stats td:not(:first-child) {
+  font-weight: 600;
+  color: var(--accent);
+}
+#stats td:first-child { color: var(--text); font-weight: 500; }
 </style>
 </head>
 
 <body>
 
+<!-- ── Header ── -->
 <header>
-<button onclick="toggleDark()">🌙</button>
-<button onclick="goToday()">오늘</button>
-<input type="date" id="weekPicker">
-
-<button onclick="localBackup()">📦 로컬백업</button>
-<input type="file" id="localFile" style="display:none">
-<button onclick="document.getElementById('localFile').click()">📂 불러오기</button>
-
-<button onclick="GitHubSync.upload()">🔼 GitHub</button>
-<button onclick="GitHubSync.download()">🔽 GitHub</button>
-<button onclick="GitHubSync.clear()">토큰초기화</button>
+  <span class="logo">Practice Check</span>
+  <div class="header-sep"></div>
+  <button onclick="toggleDark()">◐ 테마</button>
+  <button onclick="goToday()">오늘</button>
+  <input type="date" id="weekPicker">
+  <div class="header-sep"></div>
+  <button onclick="localBackup()">↓ 백업</button>
+  <button onclick="document.getElementById('localFile').click()">↑ 불러오기</button>
+  <input type="file" id="localFile" style="display:none">
+  <div class="header-sep"></div>
+  <button onclick="GitHubSync.upload()">⬆ GitHub</button>
+  <button onclick="GitHubSync.download()">⬇ GitHub</button>
+  <button onclick="GitHubSync.clear()" style="color:var(--sub);">토큰초기화</button>
 </header>
 
+<!-- ── Area bar ── -->
 <div class="area-bar">
-<b>영역:</b>
-<div id="areaButtons"></div>
-<button onclick="addArea()">＋</button>
-<button onclick="renameArea()">이름변경</button>
-<button onclick="deleteArea()">삭제</button>
+  <span class="area-label">영역</span>
+  <div id="areaButtons" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"></div>
+  <button class="area-btn" onclick="addArea()">+ 추가</button>
+  <button class="area-btn" onclick="renameArea()">이름변경</button>
+  <button class="area-btn btn-danger" onclick="deleteArea()">삭제</button>
+  <div style="margin-left:auto;">
+    <button class="manage-toggle-btn" onclick="document.querySelector('.manage-panel').classList.toggle('open')">⚙ 관리</button>
+  </div>
 </div>
 
-<div class="panel">
-<b>관리 패널</b><br><br>
+<!-- ── Manage panel (collapsible) ── -->
+<div class="manage-panel">
+  <div class="manage-grid">
 
-카테고리:
-<select id="categorySelect"></select>
-<input id="categoryName">
-<input type="color" id="categoryColor">
-<button onclick="addCategory()">추가</button>
-<button onclick="updateCategory()">수정</button>
-<button onclick="deleteCategory()">삭제</button>
-<br><br>
+    <div class="manage-section">
+      <div class="manage-section-title">카테고리</div>
+      <div class="manage-row">
+        <select id="categorySelect" style="flex:1;min-width:100px;"></select>
+        <input id="categoryName" placeholder="이름" style="flex:1;min-width:90px;">
+        <input type="color" id="categoryColor" value="#3a5bd9">
+      </div>
+      <div class="manage-row">
+        <button class="btn-primary" onclick="addCategory()">추가</button>
+        <button onclick="updateCategory()">수정</button>
+        <button class="btn-danger" onclick="deleteCategory()">삭제</button>
+      </div>
+    </div>
 
-습관:
-<select id="habitSelect"></select>
-<input id="habitName">
-<button onclick="addHabit()">추가</button>
-<button onclick="updateHabit()">수정</button>
-<button onclick="deleteHabit()">삭제</button>
-<br><br>
+    <div class="manage-section">
+      <div class="manage-section-title">습관</div>
+      <div class="manage-row">
+        <select id="habitSelect" style="flex:1;min-width:100px;"></select>
+        <input id="habitName" placeholder="습관 이름" style="flex:1;min-width:100px;">
+      </div>
+      <div class="manage-row">
+        <button class="btn-primary" onclick="addHabit()">추가</button>
+        <button onclick="updateHabit()">수정</button>
+        <button class="btn-danger" onclick="deleteHabit()">삭제</button>
+      </div>
+    </div>
 
-단계:
-<select id="stageSelect"></select>
-<input id="stageName">
-<button onclick="addStage()">추가</button>
-<button onclick="updateStage()">수정</button>
-<button onclick="deleteStage()">삭제</button>
-<br><br>
+    <div class="manage-section">
+      <div class="manage-section-title">단계</div>
+      <div class="manage-row">
+        <select id="stageSelect" style="flex:1;min-width:100px;"></select>
+        <input id="stageName" placeholder="단계 이름" style="flex:1;min-width:100px;">
+      </div>
+      <div class="manage-row">
+        <button class="btn-primary" onclick="addStage()">추가</button>
+        <button onclick="updateStage()">수정</button>
+        <button class="btn-danger" onclick="deleteStage()">삭제</button>
+      </div>
+    </div>
 
-반복:
-<select id="recList"></select>
-<input type="number" id="recDays" min="1" style="width:80px">
-<input type="color" id="recColor" value="#f87171">
-<button onclick="addRecurrence()">추가</button>
-<button onclick="deleteRecurrence()">삭제</button>
+    <div class="manage-section">
+      <div class="manage-section-title">반복 주기</div>
+      <div class="manage-row">
+        <select id="recList" style="flex:1;min-width:80px;"></select>
+        <input type="number" id="recDays" min="1" placeholder="일수" style="width:80px;">
+        <input type="color" id="recColor" value="#f87171">
+      </div>
+      <div class="manage-row">
+        <button class="btn-primary" onclick="addRecurrence()">추가</button>
+        <button class="btn-danger" onclick="deleteRecurrence()">삭제</button>
+      </div>
+    </div>
+
+  </div>
 </div>
 
+<!-- ── Main ── -->
 <div class="container">
-<h3>📅 주간 기록</h3>
-<table id="table"></table>
-<h3>📊 통계</h3>
-<table id="stats"></table>
+
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-title">📅 주간 기록</span>
+    </div>
+    <div class="section-body">
+      <table id="table"></table>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-title">📊 통계</span>
+    </div>
+    <div class="section-body">
+      <table id="stats"></table>
+    </div>
+  </div>
+
 </div>
 
 <script>
 /* ===== AREA DATA ===== */
-let areas=JSON.parse(localStorage.getItem("areas")||"[]");
-let currentAreaIndex=parseInt(localStorage.getItem("currentAreaIndex")||0);
+let areas = JSON.parse(localStorage.getItem("areas") || "[]");
+let currentAreaIndex = parseInt(localStorage.getItem("currentAreaIndex") || 0);
 
-if(areas.length===0){
-areas.push({name:"기본",categories:[],habits:[],stages:["없음"],data:{},recurrenceList:[]});
+if (areas.length === 0) {
+  areas.push({ name:"기본", categories:[], habits:[], stages:["없음"], data:{}, recurrenceList:[] });
 }
 
-function getArea(){return areas[currentAreaIndex];}
-function save(){localStorage.setItem("areas",JSON.stringify(areas));localStorage.setItem("currentAreaIndex",currentAreaIndex);}
+function getArea() { return areas[currentAreaIndex]; }
+function save() {
+  localStorage.setItem("areas", JSON.stringify(areas));
+  localStorage.setItem("currentAreaIndex", currentAreaIndex);
+}
 
 /* ===== AREA UI ===== */
-function renderAreaBar(){
-areaButtons.innerHTML="";
-areas.forEach((a,i)=>areaButtons.innerHTML+=`<button class="${i===currentAreaIndex?"active":""}" onclick="switchArea(${i})">${a.name}</button>`);
+function renderAreaBar() {
+  const wrap = document.getElementById("areaButtons");
+  wrap.innerHTML = "";
+  areas.forEach((a, i) => {
+    const b = document.createElement("button");
+    b.textContent = a.name;
+    b.className = "area-btn" + (i === currentAreaIndex ? " active" : "");
+    b.onclick = () => switchArea(i);
+    wrap.appendChild(b);
+  });
 }
-function switchArea(i){currentAreaIndex=i;render();}
-function addArea(){let name=prompt("이름");if(!name)return;areas.push({name,categories:[],habits:[],stages:["없음"],data:{},recurrenceList:[]});currentAreaIndex=areas.length-1;render();}
-function renameArea(){let name=prompt("새 이름",getArea().name);if(!name)return;getArea().name=name;render();}
-function deleteArea(){if(areas.length===1)return alert("최소 1개 필요");areas.splice(currentAreaIndex,1);currentAreaIndex=0;render();}
+function switchArea(i) { currentAreaIndex = i; render(); }
+function addArea() {
+  const name = prompt("영역 이름"); if (!name) return;
+  areas.push({ name, categories:[], habits:[], stages:["없음"], data:{}, recurrenceList:[] });
+  currentAreaIndex = areas.length - 1; render();
+}
+function renameArea() {
+  const name = prompt("새 이름", getArea().name); if (!name) return;
+  getArea().name = name; render();
+}
+function deleteArea() {
+  if (areas.length === 1) return alert("최소 1개 필요");
+  areas.splice(currentAreaIndex, 1); currentAreaIndex = 0; render();
+}
 
 /* ===== CORE ===== */
-let currentDate=new Date();
+let currentDate = new Date();
 
-function render(){
-renderAreaBar();
-renderSelects();
-renderTable();
-renderStats();
-save();
+function render() {
+  renderAreaBar();
+  renderSelects();
+  renderTable();
+  renderStats();
+  save();
 }
 
-function renderSelects(){
-const a=getArea();
-categorySelect.innerHTML=a.categories.map((c,i)=>`<option value="${i}">${c.name}</option>`).join("");
-habitSelect.innerHTML=a.habits.map((h,i)=>`<option value="${i}">${h.name}</option>`).join("");
-stageSelect.innerHTML=a.stages.map((s,i)=>`<option value="${i}">${s}</option>`).join("");
-recList.innerHTML=a.recurrenceList.map((r,i)=>`<option value="${i}">${r.days}일</option>`).join("");
+function renderSelects() {
+  const a = getArea();
+  document.getElementById("categorySelect").innerHTML = a.categories.map((c,i) => `<option value="${i}">${c.name}</option>`).join("");
+  document.getElementById("habitSelect").innerHTML    = a.habits.map((h,i) => `<option value="${i}">${h.name}</option>`).join("");
+  document.getElementById("stageSelect").innerHTML   = a.stages.map((s,i) => `<option value="${i}">${s}</option>`).join("");
+  document.getElementById("recList").innerHTML        = a.recurrenceList.map((r,i) => `<option value="${i}">${r.days}일</option>`).join("");
 }
 
-/* CRUD */
-function addCategory(){const a=getArea();a.categories.push({name:categoryName.value,color:categoryColor.value});render();}
-function updateCategory(){const a=getArea();a.categories[categorySelect.value]={name:categoryName.value,color:categoryColor.value};render();}
-function deleteCategory(){const a=getArea();a.categories.splice(categorySelect.value,1);render();}
-function addHabit(){const a=getArea();a.habits.push({name:habitName.value,cat:categorySelect.value});render();}
-function updateHabit(){const a=getArea();let h=a.habits[habitSelect.value];h.name=habitName.value;h.cat=categorySelect.value;render();}
-function deleteHabit(){const a=getArea();a.habits.splice(habitSelect.value,1);render();}
-function addStage(){const a=getArea();a.stages.push(stageName.value);render();}
-function updateStage(){const a=getArea();a.stages[stageSelect.value]=stageName.value;render();}
-function deleteStage(){const a=getArea();if(a.stages.length>1)a.stages.splice(stageSelect.value,1);render();}
-function addRecurrence(){const a=getArea();a.recurrenceList.push({days:parseInt(recDays.value),color:recColor.value});render();}
-function deleteRecurrence(){const a=getArea();a.recurrenceList.splice(recList.value,1);render();}
+/* ── CRUD ── */
+function addCategory()    { const a=getArea(); a.categories.push({name:document.getElementById("categoryName").value, color:document.getElementById("categoryColor").value}); render(); }
+function updateCategory() { const a=getArea(); a.categories[document.getElementById("categorySelect").value]={name:document.getElementById("categoryName").value, color:document.getElementById("categoryColor").value}; render(); }
+function deleteCategory() { const a=getArea(); a.categories.splice(document.getElementById("categorySelect").value,1); render(); }
+function addHabit()    { const a=getArea(); a.habits.push({name:document.getElementById("habitName").value, cat:document.getElementById("categorySelect").value}); render(); }
+function updateHabit() { const a=getArea(); let h=a.habits[document.getElementById("habitSelect").value]; h.name=document.getElementById("habitName").value; h.cat=document.getElementById("categorySelect").value; render(); }
+function deleteHabit() { const a=getArea(); a.habits.splice(document.getElementById("habitSelect").value,1); render(); }
+function addStage()    { const a=getArea(); a.stages.push(document.getElementById("stageName").value); render(); }
+function updateStage() { const a=getArea(); a.stages[document.getElementById("stageSelect").value]=document.getElementById("stageName").value; render(); }
+function deleteStage() { const a=getArea(); if(a.stages.length>1)a.stages.splice(document.getElementById("stageSelect").value,1); render(); }
+function addRecurrence()    { const a=getArea(); a.recurrenceList.push({days:parseInt(document.getElementById("recDays").value), color:document.getElementById("recColor").value}); render(); }
+function deleteRecurrence() { const a=getArea(); a.recurrenceList.splice(document.getElementById("recList").value,1); render(); }
 
 /* ===== TABLE ===== */
-function getWeek(d){let date=new Date(d);let day=date.getDay();let diff=date.getDate()-day+(day===0?-6:1);let monday=new Date(date.setDate(diff));let arr=[];for(let i=0;i<7;i++){let nd=new Date(monday);nd.setDate(monday.getDate()+i);arr.push(nd);}return arr;}
-
-function renderTable(){
-const a=getArea();
-const week=getWeek(currentDate);
-const today=new Date().toDateString();
-table.innerHTML="";
-let header="<tr><th>습관</th>";
-week.forEach(d=>header+=`<th class="${d.toDateString()==today?"today":""}">${d.getMonth()+1}/${d.getDate()}</th>`);
-header+="</tr>";
-table.innerHTML+=header;
-
-let sorted=[...a.habits].sort((x,y)=>x.cat-y.cat);
-
-sorted.forEach(h=>{
-const cat=a.categories[h.cat]||{name:"",color:"#999"};
-let row=`<tr><td><span class="category-label" style="background:${cat.color}">${cat.name}</span> ${h.name}</td>`;
-
-/* 마지막 완료일 */
-let lastDone=null;
-Object.keys(a.data).forEach(k=>{
-if(k.startsWith(h.name)&&a.data[k]===a.stages.length-1){
-let d=new Date(k.slice(h.name.length));
-if(!lastDone||d>lastDone) lastDone=d;
-}
-});
-
-week.forEach(d=>{
-let key=h.name+d.toDateString();
-let v=a.data[key]||0;
-let style="";
-
-if(lastDone){
-a.recurrenceList.forEach(r=>{
-let diff=Math.floor((d-lastDone)/(1000*60*60*24));
-if(diff===r.days) style=`background:${r.color};color:#fff`;
-});
+function getWeek(d) {
+  let date = new Date(d);
+  let day  = date.getDay();
+  let diff = date.getDate() - day + (day === 0 ? -6 : 1);
+  let monday = new Date(date.setDate(diff));
+  let arr = [];
+  for (let i = 0; i < 7; i++) {
+    let nd = new Date(monday); nd.setDate(monday.getDate() + i); arr.push(nd);
+  }
+  return arr;
 }
 
-row+=`<td onclick="cycle('${key}')" style="${style}">${a.stages[v]}</td>`;
-});
-row+="</tr>";
-table.innerHTML+=row;
-});
+const DAY_LABELS = ["월","화","수","목","금","토","일"];
+
+function renderTable() {
+  const a    = getArea();
+  const week = getWeek(currentDate);
+  const todayStr = new Date().toDateString();
+  const tbl  = document.getElementById("table");
+  tbl.innerHTML = "";
+
+  // Header
+  let header = "<thead><tr><th>습관</th>";
+  week.forEach((d, i) => {
+    const isToday = d.toDateString() === todayStr;
+    header += `<th class="${isToday ? "today-col" : ""}">${DAY_LABELS[i]}<br><span style="font-size:10px;font-weight:500;opacity:0.8;">${d.getMonth()+1}/${d.getDate()}</span></th>`;
+  });
+  header += "</tr></thead>";
+  tbl.innerHTML += header;
+
+  const sorted = [...a.habits].sort((x, y) => x.cat - y.cat);
+  let tbody = "<tbody>";
+
+  sorted.forEach(h => {
+    const cat = a.categories[h.cat] || { name:"", color:"#8b909a" };
+
+    // last completed date
+    let lastDone = null;
+    Object.keys(a.data).forEach(k => {
+      if (k.startsWith(h.name) && a.data[k] === a.stages.length - 1) {
+        let d = new Date(k.slice(h.name.length));
+        if (!lastDone || d > lastDone) lastDone = d;
+      }
+    });
+
+    let row = `<tr><td><span class="cat-badge" style="background:${cat.color}">${cat.name}</span>${h.name}</td>`;
+    week.forEach((d, di) => {
+      const isToday = d.toDateString() === todayStr;
+      const key = h.name + d.toDateString();
+      const v   = a.data[key] || 0;
+      const stageLabel = a.stages[v];
+
+      // recurrence highlight
+      let cellStyle = isToday ? `background:var(--today-bg);color:var(--today-text);` : "";
+      let cellTitle  = "";
+      if (lastDone) {
+        a.recurrenceList.forEach(r => {
+          const diff = Math.floor((d - lastDone) / (1000*60*60*24));
+          if (diff === r.days) { cellStyle = `background:${r.color};color:#fff;`; cellTitle = `반복 ${r.days}일`; }
+        });
+      }
+
+      // stage color tint when not default
+      const stageOpacity = v === 0 ? "opacity:0.35;" : "";
+
+      row += `<td class="cycle-cell${isToday ? " today-col" : ""}" onclick="cycle('${key}')" style="${cellStyle}" title="${cellTitle}">
+        <span style="${stageOpacity}">${stageLabel}</span>
+      </td>`;
+    });
+    row += "</tr>";
+    tbody += row;
+  });
+
+  tbody += "</tbody>";
+  tbl.innerHTML += tbody;
 }
 
-function cycle(key){
-const a=getArea();
-let v=a.data[key]||0;
-v=(v+1)%a.stages.length;
-a.data[key]=v;
-render();
+function cycle(key) {
+  const a = getArea();
+  let v = a.data[key] || 0;
+  v = (v + 1) % a.stages.length;
+  a.data[key] = v;
+  render();
 }
 
 /* ===== STATS ===== */
-function renderStats(){
-const a=getArea();
-stats.innerHTML="";
-let header="<tr><th>습관</th>";
-a.stages.forEach(s=>header+=`<th>${s}</th>`);
-header+="</tr>";
-stats.innerHTML+=header;
+function renderStats() {
+  const a = getArea();
+  const stbl = document.getElementById("stats");
+  stbl.innerHTML = "";
 
-a.habits.forEach(h=>{
-let row=`<tr><td>${h.name}</td>`;
-a.stages.forEach((s,i)=>{
-let count=0;
-Object.keys(a.data).forEach(k=>{if(k.startsWith(h.name)&&a.data[k]==i)count++;});
-row+=`<td>${count}</td>`;
-});
-row+="</tr>";
-stats.innerHTML+=row;
-});
+  let header = "<thead><tr><th>습관</th>";
+  a.stages.forEach(s => header += `<th>${s}</th>`);
+  header += "</tr></thead><tbody>";
+  stbl.innerHTML += header;
+
+  let tbody = "";
+  a.habits.forEach(h => {
+    let row = `<tr><td>${h.name}</td>`;
+    a.stages.forEach((s, i) => {
+      let count = 0;
+      Object.keys(a.data).forEach(k => { if (k.startsWith(h.name) && a.data[k] == i) count++; });
+      row += `<td>${count > 0 ? count : "<span style='color:var(--border)'>—</span>"}</td>`;
+    });
+    row += "</tr>";
+    tbody += row;
+  });
+  stbl.innerHTML += tbody + "</tbody>";
 }
 
 /* ===== LOCAL BACKUP ===== */
-function localBackup(){
-const blob=new Blob([JSON.stringify(areas,null,2)],{type:"application/json"});
-const a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="habit_area_backup.json";
-a.click();
+function localBackup() {
+  const blob = new Blob([JSON.stringify(areas, null, 2)], { type:"application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "habit_area_backup.json";
+  a.click();
 }
-
-document.getElementById("localFile").addEventListener("change",e=>{
-const file=e.target.files[0];
-if(!file) return;
-const reader=new FileReader();
-reader.onload=()=>{
-areas=JSON.parse(reader.result);
-currentAreaIndex=0;
-render();
-};
-reader.readAsText(file);
+document.getElementById("localFile").addEventListener("change", e => {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => { areas = JSON.parse(reader.result); currentAreaIndex = 0; render(); };
+  reader.readAsText(file);
 });
 
 /* ===== MISC ===== */
-function toggleDark(){document.body.classList.toggle("dark");}
-function goToday(){currentDate=new Date();weekPicker.valueAsDate=currentDate;render();}
-weekPicker.addEventListener("change",e=>{currentDate=new Date(e.target.value);render();});
+function toggleDark() { document.body.classList.toggle("dark"); }
+function goToday() { currentDate = new Date(); document.getElementById("weekPicker").valueAsDate = currentDate; render(); }
+document.getElementById("weekPicker").addEventListener("change", e => { currentDate = new Date(e.target.value); render(); });
 
 /* ===== GITHUB ===== */
-const GH={user:"apor76-cmyk",repo:"data",path:"data/practicecheck.json"};
-const API=`https://api.github.com/repos/${GH.user}/${GH.repo}/contents/${GH.path}`;
+const GH  = { user:"apor76-cmyk", repo:"data", path:"data/practicecheck.json" };
+const API = `https://api.github.com/repos/${GH.user}/${GH.repo}/contents/${GH.path}`;
 
-function getToken(){let t=localStorage.getItem("GH_TOKEN");if(!t){t=prompt("GitHub Token");if(t)localStorage.setItem("GH_TOKEN",t);}return t;}
-function clearToken(){localStorage.removeItem("GH_TOKEN");alert("삭제됨");}
+function getToken() { let t=localStorage.getItem("GH_TOKEN"); if(!t){t=prompt("GitHub Token"); if(t) localStorage.setItem("GH_TOKEN",t);} return t; }
+function clearToken() { localStorage.removeItem("GH_TOKEN"); alert("삭제됨"); }
 
-async function upload(){
-const token=getToken();if(!token)return;
-const jsonStr=JSON.stringify(areas,null,2);
-const bytes=new TextEncoder().encode(jsonStr);
-let binary=""; bytes.forEach(b=>binary+=String.fromCharCode(b));
-const content=btoa(binary);
-let sha=null;
-const check=await fetch(API,{headers:{Authorization:`token ${token}`}});
-if(check.ok){const j=await check.json();sha=j.sha;}
-await fetch(API,{method:"PUT",headers:{Authorization:`token ${token}`,"Content-Type":"application/json"},body:JSON.stringify({message:"backup",content,sha})});
-alert("업로드 완료");
+async function upload() {
+  const token = getToken(); if (!token) return;
+  const jsonStr = JSON.stringify(areas, null, 2);
+  const bytes = new TextEncoder().encode(jsonStr);
+  let binary = ""; bytes.forEach(b => binary += String.fromCharCode(b));
+  const content = btoa(binary);
+  let sha = null;
+  const check = await fetch(API, { headers:{ Authorization:`token ${token}` } });
+  if (check.ok) { const j = await check.json(); sha = j.sha; }
+  await fetch(API, { method:"PUT", headers:{ Authorization:`token ${token}`, "Content-Type":"application/json" }, body: JSON.stringify({ message:"backup", content, sha }) });
+  alert("업로드 완료");
 }
 
-async function download(){
-const token=getToken();if(!token)return;
-const res=await fetch(API,{headers:{Authorization:`token ${token}`}});
-const j=await res.json();
-const raw=atob(j.content.replace(/\n/g,""));
-const uint8=new Uint8Array(raw.length);
-for(let i=0;i<raw.length;i++) uint8[i]=raw.charCodeAt(i);
-areas=JSON.parse(new TextDecoder().decode(uint8));
-currentAreaIndex=0;
-render();
-alert("다운로드 완료");
+async function download() {
+  const token = getToken(); if (!token) return;
+  const res = await fetch(API, { headers:{ Authorization:`token ${token}` } });
+  const j = await res.json();
+  const raw = atob(j.content.replace(/\n/g,""));
+  const uint8 = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) uint8[i] = raw.charCodeAt(i);
+  areas = JSON.parse(new TextDecoder().decode(uint8));
+  currentAreaIndex = 0; render(); alert("다운로드 완료");
 }
 
-window.GitHubSync={upload,download,clear:clearToken};
+window.GitHubSync = { upload, download, clear: clearToken };
 
-window.onload=()=>{render();goToday();}
+window.onload = () => { render(); goToday(); };
 </script>
 
 </body>
